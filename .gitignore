@@ -1,0 +1,7 @@
+# Django
+*.pyc
+staticfiles/
+.env
+*.sublime-*
+local_settings.py
+
