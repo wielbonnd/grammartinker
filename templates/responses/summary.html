@@ -8,15 +8,21 @@
 
     <h2>
         simple past: {% widthratio results.simple_past_correct results.all 100 %}%
-        {{ results.simple_past_correct }} / {{ results.all }}
+        {{ results.simple_past_correct }}/{{ results.all }}
     </h2>
     <h2>
         past participle: {% widthratio results.past_participle_correct results.all 100 %}%
-        {{ results.past_participle_correct }} / {{ results.all }}
+        {{ results.past_participle_correct }}/{{ results.all }}
     </h2>
     <h2>
         summary: {% widthratio results.summary results.all2 100 %}%
-        {{ results.summary }} / {{ results.all2 }}
+        {{ results.summary }}/{{ results.all2 }}
     </h2>
+    <a href="{% url 'responses:menu' response_session.profile.id %}" class="btn-xxl btn btn-primary btn-block btn-lg ">
+        <h2>Back to exercises</h2>
+    </a>
+    <a href="{% url 'responses:start-exercise' response_session.profile.id %}" class="btn-xxl btn btn-primary btn-block btn-lg ">
+        <h2>Start again</h2>
+    </a>
 </div>
 {% endblock %}

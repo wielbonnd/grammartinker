@@ -54,7 +54,7 @@ class SaveResponse(View):
         request_data = json.loads(request.body)
         data = {}
         data['response_session_id'] = request_data.get('response_session_id', 0)
-        for attr in ['simple_past', 'simple_past_correct',
+        for attr in ['infinitive', 'simple_past', 'simple_past_correct',
                      'past_participle', 'past_participle_correct']:
             data[attr] = request_data.get(attr, '')
         return data
@@ -68,25 +68,56 @@ class SaveResponse(View):
             setattr(response, attr, response_data[attr])
         response.save()
 
-    def post(self, request, **kwargs):
+    def post(self, request, response_session_id):
         response_data = self.get_data_from_request(request)
         response_session = get_object_or_404(
             models.ResponseSession,
-            pk=response_data['response_session_id']
+            pk=response_session_id
         )
-        verb = get_object_or_404(verbs_models.Verb, infinitive=response_data['infinitive'])
+        verb = get_object_or_404(
+            verbs_models.Verb,
+            infinitive=response_data['infinitive']
+        )
         self.save_response(response_session, verb, response_data)
-        return JsonResponse("OK")
+        return JsonResponse({})
 
 
 class ResponsesSession(TemplateView):
     template_name = "responses/responses_sessions_list.html"
 
+    def _format_result(self, result, all_):
+        if all_ > 0:
+            percent = (float(result) / (all_)) * 100
+        else:
+            percent = 0
+        return (percent, result, all_)
+
+    def get_responses_json(self, profile):
+        responses_sessions = models.ResponseSession.objects.filter(
+            profile=profile
+        ).order_by('-date')
+        respones = []
+        for session in responses_sessions:
+            response = {'date': session.date.strftime('%d-%m-%Y %H:%I')}
+            results = session.get_results()
+            response['simple_past'] = self._format_result(
+                results['past_participle_correct'], results['all']
+            )
+            response['past_participle'] = self._format_result(
+                results['past_participle_correct'], results['all']
+            )
+            response['summary'] = self._format_result(
+                results['summary'], results['all2']
+            )
+            respones.append(response)
+        return json.dumps(respones)
+
     def get_context_data(self, **kwargs):
-        context = super(Menu, self).get_context_data(**kwargs)
+        context = super(ResponsesSession, self).get_context_data(**kwargs)
         profile_id = kwargs.get('profile_id', 0)
         profile = get_object_or_404(profiles_models.Profile, pk=profile_id)
-        context['responses_sessions'] = models.ResponseSession.objects.filter(profile=profile)
+        context['responses'] = self.get_responses_json(profile)
+        context['profile'] = profile
         return context
 
 

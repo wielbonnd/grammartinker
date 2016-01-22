@@ -4,4 +4,4 @@ staticfiles/
 .env
 *.sublime-*
 local_settings.py
-
+mydatabase

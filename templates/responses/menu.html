@@ -7,7 +7,7 @@
     <a href="{% url 'responses:start-exercise' profile.id %}" class="btn-xxl btn btn-primary btn-block btn-lg ">
         <h2>Start exercise</h2>
     </a>
-    <a href="#" class="btn-xxl btn btn-primary btn-block btn-lg ">
+    <a href="{% url 'responses:responses-list' profile.id %}" class="btn-xxl btn btn-primary btn-block btn-lg ">
         <h2>Browse results</h2>
     </a>
 </div>

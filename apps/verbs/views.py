@@ -1,6 +1,6 @@
 import json
 import random
-from django.views.generic import TemplateView,
+from django.views.generic import View
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
@@ -25,4 +25,4 @@ class VerbsJSON(View):
         for verb in models.Verb.objects.all():
             verbs.append(self.verb_2_dict(verb))
         random.shuffle(verbs)
-        return JsonResponse(verbs)
+        return JsonResponse(verbs, safe=False)

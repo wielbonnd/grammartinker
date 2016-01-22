@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block profile %} - {{ profile }} {% endblock %}
+
+{% block body %}
+<div style="padding-bottom:30px;">
+    <a href="{% url 'responses:menu' profile.id %}" class="btn-xxl btn btn-primary btn-block btn-lg ">
+        <h2>Back to exercises</h2>
+    </a>
+</div>
+
+<div ng-app="grammartinker">
+    <div ng-controller="resultsController as vm" >
+        <table ng-table="vm.tableParams" class="table table-condensed table-bordered table-striped">
+          <tr ng-repeat="row in $data">
+            <td data-title="'Date'"  sortable="'date'">{$ row.date $}</td>
+            <td data-title="'Simple past'">
+                {$ row.simple_past[0] $}%
+                <span style="padding-left:30px;" >
+                    {$ row.simple_past[1] $}/
+                    {$ row.simple_past[2] $}
+                </span>
+            </td>
+            <td data-title="'Past participle'" >
+                {$ row.past_participle[0] $} %
+                <span style="padding-left:30px;" >
+                    {$ row.past_participle[1] $}/
+                    {$ row.past_participle[2] $}
+                </span>
+            </td>
+
+          </tr>
+        </table>
+    </div>
+</div>
+
+
+{# move this to js file #}
+<script type="text/javascript">
+(function(){
+    var grammartinkerApp = angular.module('grammartinker', ["ngTable"]);
+
+    grammartinkerApp.config(function($httpProvider, $interpolateProvider) {
+        $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+        $interpolateProvider.startSymbol('{$');
+        $interpolateProvider.endSymbol('$}');
+    });
+    grammartinkerApp.controller("resultsController", controller);
+    controller.$inject = ["$http", "NgTableParams",];
+
+
+    function controller($http, NgTableParams, simpleList) {
+        var self = this;
+
+
+        self.tableParams = new NgTableParams({}, {
+            dataset: {{ responses|safe }}
+        });
+
+    }
+
+
+}())
+
+</script>
+{% endblock %}

@@ -3,24 +3,30 @@
 {% block profile %} - {{ profile }} {% endblock %}
 
 {% block body %}
-<div>
-    response_session.id = {{ response_session.id }}
-</div>
 
 <div ng-app="grammartinker">
     <div ng-controller="Exercise as vm" >
-        <h2>{$ vm.verb.infinitive $}</h2>
-        simple_past: <input ng-model="vm.reponse.simple_past"  />
-        <response answered="vm.answered" is-correct="vm.reponse.simple_past_correct" correct-response="vm.verb.simple_past"></response>
-        <br /><br />
+        <div ng-show="vm.loading" >
+            <h1>Loading verbs...</h1>
+            <div class='uil-ring-css' style='transform:scale(0.6);'>
+                <div></div>
+            </div>
+        </div>
 
-        past_participle: <input ng-model="vm.reponse.past_participle"  />
-        <response answered="vm.answered" is-correct="vm.reponse.past_participle_correct" correct-response="vm.verb.past_participle"></response>
-        <br /><br />
+        <div ng-show="!vm.loading">
+            <h2>{$ vm.verb.infinitive $}</h2>
+            simple_past: <input ng-model="vm.reponse.simple_past" ng-readonly="vm.answered" />
+            <response answered="vm.answered" is-correct="vm.reponse.simple_past_correct" correct-response="vm.verb.simple_past"></response>
+            <br /><br />
 
-        <button ng-click="vm.checkClick()" ng-show="!vm.answered" >Check answer</button>
-        <button ng-click="vm.nextVerbClick()" ng-show="vm.answered && vm.verbsAmount-1 > vm.currentVerbIndex ">Next verb</button>
-        <a href="{% url 'responses:summary' response_session.id %}" >Finish</a>
+            past_participle: <input ng-model="vm.reponse.past_participle" ng-readonly="vm.answered" />
+            <response answered="vm.answered" is-correct="vm.reponse.past_participle_correct" correct-response="vm.verb.past_participle"></response>
+            <br /><br />
+
+            <button ng-click="vm.checkClick()" ng-show="!vm.answered" >Check answer</button>
+            <button ng-click="vm.nextVerbClick()" ng-show="vm.answered && vm.verbsAmount-1 > vm.currentVerbIndex ">Next verb</button>
+            <a href="{% url 'responses:summary' response_session.id %}" >Finish</a>
+        </div>
     </div>
 </div>
 
@@ -56,9 +62,8 @@
         ];
         var responses = []
 
-        vm.verbsAmount = verbs.length;
         vm.currentVerbIndex = 0;
-        vm.verb = verbs[vm.currentVerbIndex];
+
         vm.reponse = {
            simple_past: '',
            simple_past_correct: false,
@@ -68,19 +73,38 @@
 
         vm.checkClick = checkReponse;
         vm.nextVerbClick = nextVerb;
+        vm.loading = true;
+
+        // TODO: move http comunication to service
+        $http({
+            method: 'GET',
+            url: '{% url "verbs:random" %}'
+        }).then(function successCallback(response) {
+            verbs = response.data;
+            vm.verbsAmount = verbs.length;
+            vm.verb = verbs[vm.currentVerbIndex];
+            vm.reponse.infinitive = vm.verb.infinitive;
+            vm.loading = false;
+        });
 
         function nextVerb() {
             responses.push(vm.response);
+            $http.post(
+                '{% url "responses:save-response" response_session.id %}',
+                vm.reponse
+            )
+
             //  save response to server
             vm.answered = false;
+            vm.currentVerbIndex += 1;
+            vm.verb = verbs[vm.currentVerbIndex];
             vm.reponse = {
+                infinitive: vm.verb.infinitive,
                 simple_past: '',
                 simple_past_correct: false,
                 past_participle: '',
                 past_participle_correct: false
             }
-            vm.currentVerbIndex += 1;
-            vm.verb = verbs[vm.currentVerbIndex];
         }
 
         function checkReponse() {
@@ -88,17 +112,6 @@
             vm.reponse.past_participle_correct = vm.reponse.past_participle.trim() == vm.verb.past_participle;
             vm.answered = true;
         }
-
-
-
-    //  TODO:
-    //  get verbs from server
-    //  move http comunication to service
-
-
-
-
-
 
     })
 
