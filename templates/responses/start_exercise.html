@@ -108,8 +108,8 @@
         }
 
         function checkReponse() {
-            vm.reponse.simple_past_correct = vm.reponse.simple_past.trim() == vm.verb.simple_past;
-            vm.reponse.past_participle_correct = vm.reponse.past_participle.trim() == vm.verb.past_participle;
+            vm.reponse.simple_past_correct = vm.reponse.simple_past.trim().toLowerCase() == vm.verb.simple_past;
+            vm.reponse.past_participle_correct = vm.reponse.past_participle.trim().toLowerCase() == vm.verb.past_participle;
             vm.answered = true;
         }
 
