@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block profile %} - {{ profile }} {% endblock %}
+
+{% block body %}
+<div>
+    response_session.id = {{ response_session.id }}
+</div>
+
+<div ng-app="grammartinker">
+    <div ng-controller="Exercise as vm" >
+        <h2>{$ vm.verb.infinitive $}</h2>
+        simple_past: <input ng-model="vm.reponse.simple_past"  />
+        <response answered="vm.answered" is-correct="vm.reponse.simple_past_correct" correct-response="vm.verb.simple_past"></response>
+        <br /><br />
+
+        past_participle: <input ng-model="vm.reponse.past_participle"  />
+        <response answered="vm.answered" is-correct="vm.reponse.past_participle_correct" correct-response="vm.verb.past_participle"></response>
+        <br /><br />
+
+        <button ng-click="vm.checkClick()" ng-show="!vm.answered" >Check answer</button>
+        <button ng-click="vm.nextVerbClick()" ng-show="vm.answered && vm.verbsAmount-1 > vm.currentVerbIndex ">Next verb</button>
+        <a href="{% url 'responses:summary' response_session.id %}" >Finish</a>
+    </div>
+</div>
+
+
+{# move this to js file #}
+<script type="text/javascript">
+(function(){
+    var grammartinkerApp = angular.module('grammartinker', []);
+
+    grammartinkerApp.config(function($httpProvider, $interpolateProvider) {
+        $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+        $interpolateProvider.startSymbol('{$');
+        $interpolateProvider.endSymbol('$}');
+    });
+
+
+    grammartinkerApp.directive('response', function() {
+        return {
+          restrict: 'E',
+          scope: { isCorrect: '=', correctResponse: '=', answered: '=' },
+          template:
+            '<span class="glyphicon glyphicon-ok text-success" ng-show="answered && isCorrect" ></span><span class="glyphicon glyphicon-remove text-danger" ng-show="answered && !isCorrect" ></span><span class="text-danger" ng-show="answered && !isCorrect" >{$ correctResponse $}</span>'
+        };
+      })
+
+    grammartinkerApp.controller("Exercise", function($http) {
+        var vm = this;
+        var model = {};
+        var verbs = [
+            {infinitive: 'read',  simple_past: 'read', past_participle: 'read'},
+            {infinitive: 'lay',  simple_past: 'laid', past_participle: 'laid'},
+            {infinitive: 'lead',  simple_past: 'led', past_participle: 'led'}
+        ];
+        var responses = []
+
+        vm.verbsAmount = verbs.length;
+        vm.currentVerbIndex = 0;
+        vm.verb = verbs[vm.currentVerbIndex];
+        vm.reponse = {
+           simple_past: '',
+           simple_past_correct: false,
+           past_participle: '',
+           past_participle_correct: false
+        }
+
+        vm.checkClick = checkReponse;
+        vm.nextVerbClick = nextVerb;
+
+        function nextVerb() {
+            responses.push(vm.response);
+            //  save response to server
+            vm.answered = false;
+            vm.reponse = {
+                simple_past: '',
+                simple_past_correct: false,
+                past_participle: '',
+                past_participle_correct: false
+            }
+            vm.currentVerbIndex += 1;
+            vm.verb = verbs[vm.currentVerbIndex];
+        }
+
+        function checkReponse() {
+            vm.reponse.simple_past_correct = vm.reponse.simple_past.trim() == vm.verb.simple_past;
+            vm.reponse.past_participle_correct = vm.reponse.past_participle.trim() == vm.verb.past_participle;
+            vm.answered = true;
+        }
+
+
+
+    //  TODO:
+    //  get verbs from server
+    //  move http comunication to service
+
+
+
+
+
+
+    })
+
+
+}())
+
+</script>
+{% endblock %}

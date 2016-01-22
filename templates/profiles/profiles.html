@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div>
+    <h1>Choose profile</h1>
+    {%  for profile in profiles %}
+        <a href="{% url 'responses:menu' profile.id %}" class="btn-xxl btn btn-primary btn-block btn-lg ">
+            <h2>{{ profile }}</h2>
+        </a>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,10 +1,8 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 from django.contrib import admin
 
-urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'gramatinker.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
-
+urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-)
+    url(r'^profiles/', include('apps.profiles.urls', namespace="profiles")),
+    url(r'^responses/', include('apps.responses.urls', namespace="responses")),
+]
