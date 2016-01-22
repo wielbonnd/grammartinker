@@ -4,7 +4,7 @@ from django.db import models
 class LowerChartFiled(models.CharField):
 
     def to_python(self, value):
-        value = super(LowerChartFiled, self).to_python(value)
+        value = super(LowerChartFiled, self).to_python(value) or ''
         return value.lower()
 
 
