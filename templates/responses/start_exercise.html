@@ -14,18 +14,37 @@
         </div>
 
         <div ng-show="!vm.loading">
-            <h2>{$ vm.verb.infinitive $}</h2>
-            simple_past: <input ng-model="vm.reponse.simple_past" ng-readonly="vm.answered" />
-            <response answered="vm.answered" is-correct="vm.reponse.simple_past_correct" correct-response="vm.verb.simple_past"></response>
-            <br /><br />
 
-            past_participle: <input ng-model="vm.reponse.past_participle" ng-readonly="vm.answered" />
-            <response answered="vm.answered" is-correct="vm.reponse.past_participle_correct" correct-response="vm.verb.past_participle"></response>
-            <br /><br />
+            <form class="form-horizontal" autocomplete="off">
+                <h2>{$ vm.verb.infinitive $}</h2>
+                <div class="form-group" ng-class="{'has-feedback': vm.answered}" >
+                    <label for="simple_past" class="col-sm-2 control-label">Simple past</label>
+                    <div class="col-sm-3" ng-class="{'has-error': vm.answered && !vm.reponse.simple_past_correct, 'has-success': vm.answered && vm.reponse.simple_past_correct}" >
+                        <input tabindex="1" ng-model="vm.reponse.simple_past" ng-readonly="vm.answered"  class="form-control" id="simple_past" />
+                        <response answered="vm.answered" is-correct="vm.reponse.simple_past_correct" correct-response="vm.verb.simple_past"></response>
+                    </div>
+                </div>
 
-            <button ng-click="vm.checkClick()" ng-show="!vm.answered" >Check answer</button>
-            <button ng-click="vm.nextVerbClick()" ng-show="vm.answered && vm.verbsAmount-1 > vm.currentVerbIndex ">Next verb</button>
-            <a href="{% url 'responses:summary' response_session.id %}" >Finish</a>
+                <div class="form-group" ng-class="{'has-feedback': vm.answered}" >
+                    <label for="past_participle" class="col-sm-2 control-label">Past participle</label>
+                    <div class="col-sm-3" ng-class="{'has-error': vm.answered && !vm.reponse.past_participle_correct, 'has-success': vm.answered && vm.reponse.past_participle_correct}" >
+                        <input tabindex="2" ng-model="vm.reponse.past_participle" ng-readonly="vm.answered" id="past_participle" class="form-control" />
+                        <response answered="vm.answered" is-correct="vm.reponse.past_participle_correct" correct-response="vm.verb.past_participle"></response>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-4">
+                        <button tabindex="3" ng-click="vm.checkClick()" ng-show="!vm.answered" class="btn btn-primary" >Check answer</button>
+                        <button tabindex="4" ng-click="vm.nextVerbClick()" ng-show="vm.answered && vm.verbsAmount-1 > vm.currentVerbIndex" class="btn btn-primary" >Next verb</button>
+                    </div>
+                    <div class="col-sm-4">
+                        <a href="{% url 'responses:summary' response_session.id %}" >
+                            <button  class="btn btn-warning">Finish</button>
+                        </a>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -48,7 +67,7 @@
           restrict: 'E',
           scope: { isCorrect: '=', correctResponse: '=', answered: '=' },
           template:
-            '<span class="glyphicon glyphicon-ok text-success" ng-show="answered && isCorrect" ></span><span class="glyphicon glyphicon-remove text-danger" ng-show="answered && !isCorrect" ></span><span class="text-danger" ng-show="answered && !isCorrect" >{$ correctResponse $}</span>'
+            '<span class="glyphicon glyphicon-ok text-success form-control-feedback" ng-show="answered && isCorrect" ></span><span class="glyphicon glyphicon-remove text-danger form-control-feedback" ng-show="answered && !isCorrect" ></span><span class="text-danger help-inline" ng-show="answered && !isCorrect" >{$ correctResponse $}</span>'
         };
       })
 

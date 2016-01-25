@@ -15,20 +15,21 @@
           <tr ng-repeat="row in $data">
             <td data-title="'Date'"  sortable="'date'">{$ row.date $}</td>
             <td data-title="'Simple past'">
-                {$ row.simple_past[0] $}%
-                <span style="padding-left:30px;" >
-                    {$ row.simple_past[1] $}/
-                    {$ row.simple_past[2] $}
+                <div class="progress-bar" role="progressbar" style="width: {$ row.simple_past[0] $}%">
+                    {$ row.simple_past[0] $}%
+                </div>
+                <span class="pull-right">
+                    {$ row.simple_past[1] $} / {$ row.simple_past[2] $}
                 </span>
             </td>
             <td data-title="'Past participle'" >
-                {$ row.past_participle[0] $} %
-                <span style="padding-left:30px;" >
-                    {$ row.past_participle[1] $}/
-                    {$ row.past_participle[2] $}
+                    <div class="progress-bar" role="progressbar" style="width: {$ row.past_participle[0] $}%">
+                        {$ row.past_participle[0] $} %
+                    </div>
+                <span class="pull-right" >
+                    {$ row.past_participle[1] $}/{$ row.past_participle[2] $}
                 </span>
             </td>
-
           </tr>
         </table>
     </div>
