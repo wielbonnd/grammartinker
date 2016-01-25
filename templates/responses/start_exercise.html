@@ -39,8 +39,8 @@
                         <button tabindex="4" ng-click="vm.nextVerbClick()" ng-show="vm.answered && vm.verbsAmount-1 > vm.currentVerbIndex" class="btn btn-primary" >Next verb</button>
                     </div>
                     <div class="col-sm-4">
-                        <a href="{% url 'responses:summary' response_session.id %}" >
-                            <button  class="btn btn-warning">Finish</button>
+                        <a class="btn btn-warning" href="{% url 'responses:summary' response_session.id %}" >
+                             Finish
                         </a>
                     </div>
                 </div>
