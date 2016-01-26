@@ -14,7 +14,7 @@ class Verb(models.Model):
         unique=True
     )
     simple_past = LowerChartFiled(
-        max_length=32
+        max_length=32,
     )
     past_participle = LowerChartFiled(
         max_length=32

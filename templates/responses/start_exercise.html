@@ -14,9 +14,14 @@
         </div>
 
         <div ng-show="!vm.loading">
+            <div class="row" >
+                <h2 class="col-sm-6" >{$ vm.verb.infinitive $}</h2>
+                <h2 class="col-sm-3 text-info" >
+                    <strong>{$ vm.currentVerbIndex + 1 $}/{$ vm.verbsAmount $}</strong>
+                </h2>
+            </div>
 
-            <form class="form-horizontal" autocomplete="off">
-                <h2>{$ vm.verb.infinitive $}</h2>
+            <form class="form-horizontal row col-sm-12" autocomplete="off">
                 <div class="form-group" ng-class="{'has-feedback': vm.answered}" >
                     <label for="simple_past" class="col-sm-2 control-label">Simple past</label>
                     <div class="col-sm-3" ng-class="{'has-error': vm.answered && !vm.reponse.simple_past_correct, 'has-success': vm.answered && vm.reponse.simple_past_correct}" >
