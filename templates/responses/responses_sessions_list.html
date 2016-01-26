@@ -37,31 +37,8 @@
 
 
 {# move this to js file #}
-<script type="text/javascript">
-(function(){
-    var grammartinkerApp = angular.module('grammartinker', ["ngTable"]);
+{% endblock %}
 
-    grammartinkerApp.config(function($httpProvider, $interpolateProvider) {
-        $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-        $interpolateProvider.startSymbol('{$');
-        $interpolateProvider.endSymbol('$}');
-    });
-    grammartinkerApp.controller("resultsController", controller);
-    controller.$inject = ["$http", "NgTableParams",];
-
-
-    function controller($http, NgTableParams, simpleList) {
-        var self = this;
-
-
-        self.tableParams = new NgTableParams({}, {
-            dataset: {{ responses|safe }}
-        });
-
-    }
-
-
-}())
-
-</script>
+{% block extra_js %}
+    <script>{% include 'js/responses_table.js' %}</script>
 {% endblock %}

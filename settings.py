@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(__file__)
 SECRET_KEY = 'i@!4-e-k1l=ak3-h#@+@4%5$09b^-6emam%e)9lnc%wl5u=-t4'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -60,7 +60,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, "templates")
+            os.path.join(BASE_DIR, "templates"),
+            os.path.join(BASE_DIR, "static"),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -84,11 +85,6 @@ DATABASES = {}
 
 # Parse database configuration from $DATABASE_URL
 DATABASES['default'] = dj_database_url.config()
-try:
-    from local_settings import *
-except ImportError:
-    pass
-
 
 # Enable Persistent Connections
 DATABASES['default']['CONN_MAX_AGE'] = 500
@@ -124,3 +120,9 @@ STATICFILES_DIRS = (
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+
+try:
+    from local_settings import *
+except ImportError:
+    pass
+
