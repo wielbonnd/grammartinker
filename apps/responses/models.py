@@ -10,8 +10,8 @@ class ResponseSession(models.Model):
         auto_now_add=True
     )
 
+    # TODO :move this to manager
     def get_results(self):
-        # TODO :move this to manager
         results = self.verbs.aggregate(
             simple_past_correct=Coalesce(models.Sum(
                 models.Case(

@@ -87,7 +87,7 @@ class ResponsesSession(TemplateView):
 
     def _format_result(self, result, all_):
         if all_ > 0:
-            percent = (float(result) / (all_)) * 100
+            percent = round((float(result) / (all_)) * 100, 2)
         else:
             percent = 0
         return (percent, result, all_)
